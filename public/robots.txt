@@ -1,0 +1,25 @@
+# Robots.txt for ANTIGRAVITY E-commerce
+# https://www.robotstxt.org/
+
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow admin and private pages
+Disallow: /admin/
+Disallow: /account/
+Disallow: /checkout/
+Disallow: /api/
+
+# Disallow search result pages (if you add search functionality)
+Disallow: /search?
+
+# Allow product pages and shop
+Allow: /shop
+Allow: /product/
+
+# Sitemap location
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Crawl delay (optional - reduces server load)
+# Crawl-delay: 1

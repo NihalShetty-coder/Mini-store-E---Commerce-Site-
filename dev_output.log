@@ -1,0 +1,37 @@
+⚠ Port 3000 is in use by process 21260, using available port 3001 instead.
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://10.235.254.161:3001
+- Environments: .env.local
+- Experiments (use with caution):
+  · optimizePackageImports
+  · serverActions
+
+✓ Starting...
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 3.3s
+○ Compiling / ...
+ GET / 200 in 10.6s (compile: 9.0s, proxy.ts: 217ms, render: 1382ms)
+○ Compiling /product/[id] ...
+ GET /product/j1izatt9VWXv14pYWW6I 200 in 15.3s (compile: 11.4s, proxy.ts: 13ms, render: 3.8s)
+ GET /login 200 in 2.8s (compile: 2.7s, proxy.ts: 6ms, render: 68ms)
+ GET / 200 in 330ms (compile: 74ms, proxy.ts: 68ms, render: 188ms)
+○ Compiling /account ...
+ GET /account 200 in 4.5s (compile: 4.3s, proxy.ts: 12ms, render: 203ms)
+ GET /admin 200 in 4.0s (compile: 3.6s, proxy.ts: 19ms, render: 450ms)
+ GET /admin/orders 200 in 2.8s (compile: 2.6s, proxy.ts: 22ms, render: 137ms)
+[INFO] [CLEANUP] Auto-deleted expired pending order 5USCFV 
+[INFO] [CLEANUP] Auto-deleted expired pending order AK3XBT 
+ POST /api/cleanup-orders 200 in 4.5s (compile: 2.4s, render: 2.1s)
+[INFO] [CLEANUP] Auto-deleted expired pending order 5USCFV 
+[INFO] [CLEANUP] Auto-deleted expired pending order AK3XBT 
+ POST /api/cleanup-orders 200 in 5.2s (compile: 2.7s, render: 2.6s)
+ GET /admin 200 in 59ms (compile: 13ms, proxy.ts: 6ms, render: 41ms)
+ GET /admin/orders 200 in 51ms (compile: 14ms, proxy.ts: 6ms, render: 31ms)
+ POST /api/cleanup-orders 200 in 241ms (compile: 12ms, render: 229ms)
+ POST /api/cleanup-orders 200 in 261ms (compile: 49ms, render: 212ms)
+○ Compiling /admin/products ...
+ GET /admin/products 200 in 6.4s (compile: 6.2s, proxy.ts: 6ms, render: 218ms)
+ GET /admin/analytics 200 in 10.5s (compile: 10.2s, proxy.ts: 54ms, render: 214ms)
+ GET /admin/customers 200 in 1688ms (compile: 1569ms, proxy.ts: 27ms, render: 91ms)
+ GET /admin/products 200 in 40ms (compile: 12ms, proxy.ts: 5ms, render: 24ms)
