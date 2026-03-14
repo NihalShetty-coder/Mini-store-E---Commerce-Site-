@@ -61,7 +61,7 @@ const SignUpPage = () => {
         try {
             await signup(formData.firstName, formData.lastName, formData.email, formData.password);
             addToast(`Welcome, ${formData.firstName}! Your account is ready.`, 'success');
-            router.push('/account');
+            router.push('/');
         } catch {
             addToast('Something went wrong. Please try again.', 'error');
         } finally {
@@ -74,7 +74,7 @@ const SignUpPage = () => {
         try {
             await loginWithGoogle();
             addToast('Signed in with Google!', 'success');
-            router.push('/account');
+            router.push('/');
         } catch {
             addToast('Google sign-in failed. Please try again.', 'error');
         } finally {
@@ -92,133 +92,112 @@ const SignUpPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="w-full max-w-md"
                 >
-                    <div className="text-center mb-12">
-                        <h1 className="font-playfair text-4xl md:text-5xl font-black text-secondary mb-4">Join Us</h1>
-                        <p className="text-muted-custom text-sm">Become a member for a curated shopping experience</p>
-                    </div>
+                    <form onSubmit={handleSubmit} className="auth-form" noValidate>
+                        <p className="auth-heading">Sign Up</p>
 
-                    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-secondary flex items-center gap-2">
-                                    <User className="w-3 h-3" />
-                                    First Name
-                                </label>
+                            <div className={cn("auth-field", errors.firstName && "border-red-500")}>
+                                <User className="w-3 h-3 text-primary" />
                                 <input
                                     type="text"
+                                    placeholder="First Name"
+                                    className="auth-input-field"
                                     value={formData.firstName}
                                     onChange={handleChange('firstName')}
-                                    className={cn("w-full bg-surface border px-4 py-4 text-sm outline-none transition-colors", errors.firstName ? "border-primary" : "border-border-custom focus:border-secondary")}
                                 />
-                                {errors.firstName && <p className="text-[10px] text-primary font-bold">{errors.firstName}</p>}
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-secondary">Last Name</label>
+                            <div className={cn("auth-field", errors.lastName && "border-red-500")}>
                                 <input
                                     type="text"
+                                    placeholder="Last Name"
+                                    className="auth-input-field"
                                     value={formData.lastName}
                                     onChange={handleChange('lastName')}
-                                    className={cn("w-full bg-surface border px-4 py-4 text-sm outline-none transition-colors", errors.lastName ? "border-primary" : "border-border-custom focus:border-secondary")}
                                 />
-                                {errors.lastName && <p className="text-[10px] text-primary font-bold">{errors.lastName}</p>}
                             </div>
                         </div>
+                        {(errors.firstName || errors.lastName) && (
+                            <div className="flex justify-between px-4">
+                                <p className="text-[10px] text-red-500 font-bold">{errors.firstName}</p>
+                                <p className="text-[10px] text-red-500 font-bold">{errors.lastName}</p>
+                            </div>
+                        )}
 
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-secondary flex items-center gap-2">
-                                <Mail className="w-3 h-3" />
-                                Email Address
-                            </label>
+                        <div className={cn("auth-field", errors.email && "border-red-500")}>
+                            <Mail className="w-3 h-3 text-primary" />
                             <input
                                 type="email"
+                                placeholder="Email Address"
+                                className="auth-input-field"
                                 value={formData.email}
                                 onChange={handleChange('email')}
-                                placeholder="nina@example.com"
-                                className={cn("w-full bg-surface border px-4 py-4 text-sm outline-none transition-colors", errors.email ? "border-primary" : "border-border-custom focus:border-secondary")}
                             />
-                            {errors.email && <p className="text-[10px] text-primary font-bold">{errors.email}</p>}
                         </div>
+                        {errors.email && <p className="text-[10px] text-red-500 font-bold px-4">{errors.email}</p>}
 
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-secondary flex items-center gap-2">
-                                <Lock className="w-3 h-3" />
-                                Password
-                            </label>
+                        <div className={cn("auth-field", errors.password && "border-red-500")}>
+                            <Lock className="w-3 h-3 text-primary" />
                             <input
                                 type="password"
+                                placeholder="Password"
+                                className="auth-input-field"
                                 value={formData.password}
                                 onChange={handleChange('password')}
-                                placeholder="••••••••"
-                                className={cn("w-full bg-surface border px-4 py-4 text-sm outline-none transition-colors", errors.password ? "border-primary" : "border-border-custom focus:border-secondary")}
                             />
-                            {formData.password && (
-                                <div className="space-y-1">
-                                    <div className="h-0.5 w-full bg-border-custom">
-                                        <div className={`h-full transition-all duration-300 ${strength.color}`} style={{ width: strength.width }} />
-                                    </div>
-                                    <div className={`text-[10px] font-bold uppercase tracking-widest ${strength.label === 'Weak' ? 'text-primary' : strength.label === 'Medium' ? 'text-yellow-500' : 'text-accent'}`}>
-                                        {strength.label}
-                                    </div>
-                                </div>
-                            )}
-                            {errors.password && <p className="text-[10px] text-primary font-bold">{errors.password}</p>}
                         </div>
+                        {formData.password && (
+                            <div className="space-y-1 px-4">
+                                <div className="h-0.5 w-full bg-border-custom">
+                                    <div className={`h-full transition-all duration-300 ${strength.color}`} style={{ width: strength.width }} />
+                                </div>
+                                <div className={`text-[10px] font-bold uppercase tracking-widest ${strength.label === 'Weak' ? 'text-primary' : strength.label === 'Medium' ? 'text-yellow-500' : 'text-accent'}`}>
+                                    {strength.label}
+                                </div>
+                            </div>
+                        )}
+                        {errors.password && <p className="text-[10px] text-red-500 font-bold px-4">{errors.password}</p>}
 
-                        <div className="flex items-start gap-3 p-4 bg-muted-custom/5 border border-border-custom">
+                        <div className="flex items-start gap-3 p-4 bg-white/5 border border-border-custom rounded-xl">
                             <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                             <p className="text-[10px] text-muted-custom leading-relaxed">
-                                By creating an account, you agree to our <button type="button" className="underline font-bold">Terms of Service</button> and <button type="button" className="underline font-bold">Privacy Policy</button>.
+                                By creating an account, you agree to our <button type="button" className="underline font-bold">Terms</button> & <button type="button" className="underline font-bold">Privacy</button>.
                             </p>
                         </div>
 
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full bg-secondary text-white py-5 text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all hover:bg-primary disabled:opacity-70 group"
-                        >
-                            {isLoading ? (
-                                <>
-                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    Creating Account...
-                                </>
-                            ) : (
-                                <>
-                                    Create Account
-                                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                                </>
-                            )}
-                        </button>
-                    </form>
-
-                    <div className="mt-12">
-                        <div className="relative mb-12">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-border-custom"></div>
-                            </div>
-                            <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest">
-                                <span className="bg-background px-4 text-muted-custom">Or continue with</span>
-                            </div>
+                        <div className="auth-btn-group">
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="auth-button1"
+                            >
+                                {isLoading ? "Creating Account..." : "Create Account"}
+                            </button>
+                            <Link href="/login" className="auth-button2 text-center text-[10px] font-black uppercase tracking-widest no-underline">
+                                Sign In
+                            </Link>
                         </div>
 
-                        <div className="grid grid-cols-1 gap-4">
+                        <div className="flex flex-col gap-4 mt-4">
+                            <div className="relative py-2">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-border-custom opacity-20"></div>
+                                </div>
+                                <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest">
+                                    <span className="bg-secondary px-4 text-muted-custom">Or</span>
+                                </div>
+                            </div>
+
                             <button
                                 type="button"
                                 onClick={handleGoogleSignup}
                                 disabled={isLoading}
-                                className="flex items-center justify-center gap-3 border border-border-custom px-4 py-4 hover:bg-surface transition-colors disabled:opacity-50"
+                                className="auth-button2 flex items-center justify-center gap-3"
                             >
-                                <Chrome className="w-4 h-4" />
+                                <Chrome className="w-4 h-4 text-white" />
                                 <span className="text-[10px] font-black uppercase tracking-widest">Google</span>
                             </button>
                         </div>
-                    </div>
-
-                    <p className="mt-12 text-center text-[11px] text-muted-custom leading-relaxed">
-                        Already have an account?{' '}
-                        <Link href="/login" className="text-secondary font-black border-b border-secondary/20 hover:border-secondary transition-colors uppercase tracking-widest ml-1">
-                            Sign In
-                        </Link>
-                    </p>
+                    </form>
                 </motion.div>
             </main>
 

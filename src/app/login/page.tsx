@@ -43,7 +43,7 @@ const LoginPage = () => {
         try {
             await login(email, password);
             addToast('Welcome back! You are now signed in.', 'success');
-            router.push('/account');
+            router.push('/');
         } catch (err: unknown) {
             const code = (err as { code?: string })?.code || '';
             const errMsg = (err as Error)?.message;
@@ -67,7 +67,7 @@ const LoginPage = () => {
         try {
             await loginWithGoogle();
             addToast('Signed in with Google!', 'success');
-            router.push('/account');
+            router.push('/');
         } catch {
             setErrors({ general: 'Google sign-in failed. Please try again.' });
         } finally {
@@ -85,115 +85,88 @@ const LoginPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="w-full max-w-md"
                 >
-                    <div className="text-center mb-12">
-                        <h1 className="font-playfair text-4xl md:text-5xl font-black text-secondary mb-4">Welcome Back</h1>
-                        <p className="text-muted-custom text-sm">Enter your credentials to access your account</p>
-                    </div>
+                    <form onSubmit={handleSubmit} className="auth-form" noValidate>
+                        <p className="auth-heading">Login</p>
 
-                    <AnimatePresence>
-                        {errors.general && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="flex items-center gap-3 bg-primary/5 border border-primary/20 p-4 mb-6 text-primary"
-                            >
-                                <AlertCircle className="w-4 h-4 shrink-0" />
-                                <span className="text-[11px] font-bold">{errors.general}</span>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                        <AnimatePresence>
+                            {errors.general && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 p-4 mb-4 text-red-500 rounded-lg"
+                                >
+                                    <AlertCircle className="w-4 h-4 shrink-0" />
+                                    <span className="text-[11px] font-bold">{errors.general}</span>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
-                    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-secondary flex items-center gap-2">
-                                <Mail className="w-3 h-3" />
-                                Email Address
-                            </label>
+                        <div className={cn("auth-field", errors.email && "border-red-500")}>
+                            <svg className="auth-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z"></path>
+                            </svg>
                             <input
+                                autoComplete="off"
+                                placeholder="Email Address"
+                                className="auth-input-field"
                                 type="email"
                                 value={email}
                                 onChange={e => { setEmail(e.target.value); setErrors(prev => ({ ...prev, email: undefined })); }}
-                                placeholder="nina@example.com"
-                                className={cn(
-                                    "w-full bg-surface border px-4 py-4 text-sm outline-none transition-colors",
-                                    errors.email ? "border-primary" : "border-border-custom focus:border-secondary"
-                                )}
                             />
-                            {errors.email && <p className="text-[10px] text-primary font-bold">{errors.email}</p>}
                         </div>
+                        {errors.email && <p className="text-[10px] text-red-500 font-bold px-4">{errors.email}</p>}
 
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-secondary flex items-center gap-2">
-                                    <Lock className="w-3 h-3" />
-                                    Password
-                                </label>
-                                <button type="button" className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline">
-                                    Forgot?
-                                </button>
-                            </div>
+                        <div className={cn("auth-field", errors.password && "border-red-500")}>
+                            <svg className="auth-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
+                            </svg>
                             <input
+                                placeholder="Password"
+                                className="auth-input-field"
                                 type="password"
                                 value={password}
                                 onChange={e => { setPassword(e.target.value); setErrors(prev => ({ ...prev, password: undefined })); }}
-                                placeholder="••••••••"
-                                className={cn(
-                                    "w-full bg-surface border px-4 py-4 text-sm outline-none transition-colors",
-                                    errors.password ? "border-primary" : "border-border-custom focus:border-secondary"
-                                )}
                             />
-                            {errors.password && <p className="text-[10px] text-primary font-bold">{errors.password}</p>}
+                        </div>
+                        {errors.password && <p className="text-[10px] text-red-500 font-bold px-4">{errors.password}</p>}
+
+                        <div className="auth-btn-group">
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="auth-button1"
+                            >
+                                {isLoading ? "Authenticating..." : "Login"}
+                            </button>
+                            <Link href="/signup" className="auth-button2 text-center text-[10px] font-black uppercase tracking-widest no-underline">
+                                Sign Up
+                            </Link>
                         </div>
 
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full bg-secondary text-white py-5 text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all hover:bg-primary disabled:opacity-70 group"
-                        >
-                            {isLoading ? (
-                                <>
-                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    Authenticating...
-                                </>
-                            ) : (
-                                <>
-                                    Sign In
-                                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                                </>
-                            )}
-                        </button>
-                    </form>
+                        <div className="flex flex-col gap-4 mt-4">
+                            <button type="button" className="auth-button3">Forgot Password</button>
 
-                    <div className="mt-12">
-                        <div className="relative mb-12">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-border-custom"></div>
+                            <div className="relative py-2">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-border-custom opacity-20"></div>
+                                </div>
+                                <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest">
+                                    <span className="bg-secondary px-4 text-muted-custom">Or</span>
+                                </div>
                             </div>
-                            <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest">
-                                <span className="bg-background px-4 text-muted-custom">Or continue with</span>
-                            </div>
-                        </div>
 
-                        <div className="grid grid-cols-1 gap-4">
                             <button
                                 type="button"
                                 onClick={handleGoogleLogin}
                                 disabled={isLoading}
-                                className="flex items-center justify-center gap-3 border border-border-custom px-4 py-4 hover:bg-surface transition-colors disabled:opacity-50"
+                                className="auth-button2 flex items-center justify-center gap-3"
                             >
-                                <Chrome className="w-4 h-4" />
+                                <Chrome className="w-4 h-4 text-white" />
                                 <span className="text-[10px] font-black uppercase tracking-widest">Google</span>
                             </button>
                         </div>
-                    </div>
-
-                    <p className="mt-12 text-center text-[11px] text-muted-custom leading-relaxed">
-                        New to Nihal Shetty?{' '}
-                        <Link href="/signup" className="text-secondary font-black border-b border-secondary/20 hover:border-secondary transition-colors uppercase tracking-widest ml-1">
-                            Create an account
-                        </Link>
-                    </p>
+                    </form>
                 </motion.div>
             </main>
 

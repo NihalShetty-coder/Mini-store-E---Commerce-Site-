@@ -3,7 +3,7 @@
 import React, { useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, Heart, ShoppingBag, User, LogOut } from 'lucide-react';
+import { Search, Heart, ShoppingBag, User, LogOut, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // Import stores with selective subscriptions to prevent unnecessary re-renders
@@ -15,11 +15,11 @@ import { useWishlist } from '@/hooks/use-wishlist';
 import { useToast } from '@/hooks/use-toast';
 
 // Internal UserMenu component
-function UserMenuComponent({ 
-    user, 
-    onLogout 
-}: { 
-    user: { firstName: string; role: string }; 
+function UserMenuComponent({
+    user,
+    onLogout
+}: {
+    user: { firstName: string; role: string };
     onLogout: () => void;
 }) {
     return (
@@ -54,22 +54,45 @@ function UserMenuComponent({
     );
 }
 
+interface NavItem {
+    label: string;
+    action: string;
+    submenu?: { label: string; action: string }[];
+}
+
+const NAV_ITEMS: NavItem[] = [
+    { label: 'HOME', action: 'HOME' },
+    {
+        label: 'SHOP',
+        action: 'SHOP',
+        submenu: [
+            { label: 'ALL PRODUCTS', action: 'SHOP' },
+            { label: 'NEW ARRIVALS', action: 'NEW ARRIVALS' },
+            { label: 'LIMITED EDITION', action: 'LIMITED' },
+            { label: 'SALE ITEMS', action: 'SALE' },
+        ]
+    },
+    { label: 'ACCESSORIES', action: 'ACCESSORIES' },
+    { label: 'NEW ARRIVALS', action: 'NEW ARRIVALS' },
+    { label: 'SALE', action: 'SALE' },
+];
+
 const Navbar = () => {
     // Selective store subscriptions - only subscribe to specific state slices
     const { storeName } = useSettings();
     const router = useRouter();
     const [mounted, setMounted] = React.useState(false);
-    
+
     // Use selective subscription for cart to only re-render when totalItems changes
     const totalItems = useCart(state => state.totalItems());
     const setCartOpen = useCart(state => state.setIsOpen);
-    
+
     // Auth state - useAuth returns an object, not a store
     const { user, isAuthenticated, logout } = useAuth();
-    
+
     // Wishlist count only - selective subscription
     const wishlistCount = useWishlist(state => state.items.length);
-    
+
     // Toast - selective subscription
     const addToast = useToast(state => state.addToast);
 
@@ -146,7 +169,7 @@ const Navbar = () => {
                             id="search-products"
                             name="search"
                             type="text"
-                            placeholder="Search for products (Press Enter)..."
+                            placeholder="Search for products"
                             value={localSearch}
                             onChange={(e) => setLocalSearch(e.target.value)}
                             onKeyDown={(e) => {
@@ -204,16 +227,34 @@ const Navbar = () => {
 
                 {/* Lower Nav */}
                 <nav className="hidden md:block py-3 border-t border-border-custom">
-                    <ul className="flex items-center justify-center gap-10 text-[11px] font-bold uppercase tracking-widest text-secondary">
-                        {['HOME', 'SHOP', 'NEW ARRIVALS', 'LIMITED', 'ACCESSORIES', 'SALE'].map((item) => (
-                            <li key={item}>
+                    <ul className="menu mx-auto">
+                        {NAV_ITEMS.map((item) => (
+                            <li key={item.label} className="item">
                                 <button
                                     type="button"
-                                    onClick={() => handleNavClick(item)}
-                                    className="hover:text-primary transition-colors cursor-pointer"
+                                    onClick={() => handleNavClick(item.action)}
+                                    className="link"
                                 >
-                                    {item}
+                                    <span>{item.label}</span>
+                                    {item.submenu && (
+                                        <ChevronDown className="w-3 h-3 transition-transform duration-300" />
+                                    )}
                                 </button>
+                                {item.submenu && (
+                                    <div className="submenu">
+                                        {item.submenu.map((sub) => (
+                                            <div key={sub.label} className="submenu-item">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleNavClick(sub.action)}
+                                                    className="submenu-link"
+                                                >
+                                                    {sub.label}
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </li>
                         ))}
                     </ul>

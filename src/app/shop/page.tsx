@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import { useInventory } from '@/hooks/use-inventory';
 import { useFilter, type SortOption } from '@/hooks/use-filter';
 import { ArrowUpDown } from 'lucide-react';
+import { CustomDropdown } from '@/components/ui/CustomDropdown';
 
 export default function ShopPage() {
     const { 
@@ -148,20 +149,20 @@ export default function ShopPage() {
                                 {isLoading ? "Fetching Products..." : `${filteredProducts.length} Results`}
                             </div>
                             
-                            {/* Sort Dropdown */}
                             <div className="flex items-center gap-3">
                                 <ArrowUpDown className="w-4 h-4 text-muted-custom" />
-                                <select
+                                <CustomDropdown
+                                    options={[
+                                        { label: 'Newest', value: 'newest' },
+                                        { label: 'Price: Low to High', value: 'price-low' },
+                                        { label: 'Price: High to Low', value: 'price-high' },
+                                        { label: 'Name: A-Z', value: 'name-az' },
+                                        { label: 'Name: Z-A', value: 'name-za' },
+                                    ]}
                                     value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value as SortOption)}
-                                    className="text-xs font-bold uppercase tracking-widest bg-white border border-border-custom px-4 py-2 outline-none focus:border-primary transition-all cursor-pointer"
-                                >
-                                    <option value="newest">Newest</option>
-                                    <option value="price-low">Price: Low to High</option>
-                                    <option value="price-high">Price: High to Low</option>
-                                    <option value="name-az">Name: A-Z</option>
-                                    <option value="name-za">Name: Z-A</option>
-                                </select>
+                                    onChange={(val) => setSortBy(val as SortOption)}
+                                    className="w-48"
+                                />
                             </div>
                         </div>
 

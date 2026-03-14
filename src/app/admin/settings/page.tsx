@@ -5,6 +5,7 @@ import { Globe, CheckCircle, Link as LinkIcon, Plus, Trash2, Edit3, Upload } fro
 import { useToast } from '@/hooks/use-toast';
 import { useSettings, DEFAULT_CONTACTS } from '@/hooks/use-settings';
 import { type FooterLink, type ContactMethod } from '@/lib/firestore';
+import { CustomDropdown } from '@/components/ui/CustomDropdown';
 
 export default function AdminSettingsPage() {
     const { addToast } = useToast();
@@ -368,16 +369,17 @@ export default function AdminSettingsPage() {
                     {/* Add New Link Form */}
                     <div id="footer-nav-form" className="flex flex-col gap-4 p-6 bg-surface border border-border-custom">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="space-y-2">
+                            <div className="space-y-2 flex flex-col">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-custom">Section</label>
-                                <select
+                                <CustomDropdown
+                                    options={[
+                                        { label: 'Shop', value: 'Shop' },
+                                        { label: 'Customer Care', value: 'Customer Care' },
+                                    ]}
                                     value={newLinkSection}
-                                    onChange={(e) => setNewLinkSection(e.target.value)}
-                                    className="w-full bg-white border border-border-custom px-4 py-3 text-sm outline-none focus:border-primary"
-                                >
-                                    <option value="Shop">Shop</option>
-                                    <option value="Customer Care">Customer Care</option>
-                                </select>
+                                    onChange={setNewLinkSection}
+                                    className="w-full"
+                                />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-custom">Link Name</label>

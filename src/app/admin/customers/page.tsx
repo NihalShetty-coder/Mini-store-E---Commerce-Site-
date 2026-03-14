@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { getAllUsers, getAllOrders, type Order } from '@/lib/firestore';
 import { motion } from 'framer-motion';
 import { logger } from '@/lib/logger';
+import { CustomDropdown } from '@/components/ui/CustomDropdown';
 
 type Customer = {
     id?: string;
@@ -145,15 +146,16 @@ export default function AdminCustomersPage() {
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="text-[10px] font-black uppercase tracking-widest text-muted-custom">Sort by:</span>
-                        <select
+                        <CustomDropdown
+                            options={[
+                                { label: 'Total Spent', value: 'spent' },
+                                { label: 'Total Orders', value: 'orders' },
+                                { label: 'Name', value: 'name' },
+                            ]}
                             value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value as 'name' | 'orders' | 'spent')}
-                            className="px-4 py-3 border border-border-custom bg-white text-[10px] font-black uppercase tracking-widest outline-none shadow-sm cursor-pointer"
-                        >
-                            <option value="spent">Total Spent</option>
-                            <option value="orders">Total Orders</option>
-                            <option value="name">Name</option>
-                        </select>
+                            onChange={(val) => setSortBy(val as 'name' | 'orders' | 'spent')}
+                            className="w-40"
+                        />
                     </div>
                 </div>
 

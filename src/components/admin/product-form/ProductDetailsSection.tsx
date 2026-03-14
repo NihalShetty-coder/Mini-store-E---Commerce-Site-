@@ -4,6 +4,7 @@ import React from 'react';
 import { Tag, AlertTriangle } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
 import { CATEGORIES } from './types';
+import { CustomDropdown } from '@/components/ui/CustomDropdown';
 
 interface ProductDetailsSectionProps {
     name: string;
@@ -165,20 +166,18 @@ export function ProductDetailsSection({
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                        <label className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-custom">Category *</label>
-                        <select
-                            value={category}
-                            onChange={e => setCategory(e.target.value)}
-                            className="w-full p-3 border border-border-custom outline-none focus:border-primary text-sm transition-colors"
-                            required
-                        >
-                            <option value="">Select category</option>
-                            {CATEGORIES.map(c => (
-                                <option key={c} value={c}>{c}</option>
-                            ))}
-                        </select>
-                    </div>
+                    <div className="space-y-1.5 flex flex-col">
+                                <label className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-custom">Category *</label>
+                                <CustomDropdown
+                                    options={[
+                                        { label: 'Select category', value: '' },
+                                        ...CATEGORIES.map(c => ({ label: c, value: c }))
+                                    ]}
+                                    value={category}
+                                    onChange={setCategory}
+                                    className="w-full"
+                                />
+                            </div>
                     <div className="space-y-1.5">
                         <label className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-custom">Sub-Category</label>
                         <input
@@ -215,24 +214,34 @@ export function ProductDetailsSection({
                 </div>
 
                 <div className="grid grid-cols-3 gap-4">
-                    <div className="space-y-1.5">
-                        <label className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-custom">Status</label>
-                        <select value={status} onChange={e => setStatus(e.target.value as 'Active' | 'Draft' | 'Out of Stock')} className="w-full p-3 border border-border-custom outline-none focus:border-primary text-sm transition-colors">
-                            <option value="Active">Active</option>
-                            <option value="Draft">Draft</option>
-                            <option value="Archived">Archived</option>
-                        </select>
-                    </div>
-                    <div className="space-y-1.5">
-                        <label className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-custom">Badge</label>
-                        <select value={badge} onChange={e => setBadge(e.target.value)} className="w-full p-3 border border-border-custom outline-none focus:border-primary text-sm transition-colors">
-                            <option value="">None</option>
-                            <option value="NEW">NEW</option>
-                            <option value="SALE">SALE</option>
-                            <option value="LIMITED">LIMITED</option>
-                            <option value="BESTSELLER">BESTSELLER</option>
-                        </select>
-                    </div>
+                    <div className="space-y-1.5 flex flex-col">
+                                <label className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-custom">Status</label>
+                                <CustomDropdown
+                                    options={[
+                                        { label: 'Active', value: 'Active' },
+                                        { label: 'Draft', value: 'Draft' },
+                                        { label: 'Archived', value: 'Archived' },
+                                    ]}
+                                    value={status}
+                                    onChange={(val) => setStatus(val as 'Active' | 'Draft' | 'Out of Stock')}
+                                    className="w-full"
+                                />
+                            </div>
+                            <div className="space-y-1.5 flex flex-col">
+                                <label className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-custom">Badge</label>
+                                <CustomDropdown
+                                    options={[
+                                        { label: 'None', value: '' },
+                                        { label: 'NEW', value: 'NEW' },
+                                        { label: 'SALE', value: 'SALE' },
+                                        { label: 'LIMITED', value: 'LIMITED' },
+                                        { label: 'BESTSELLER', value: 'BESTSELLER' },
+                                    ]}
+                                    value={badge}
+                                    onChange={setBadge}
+                                    className="w-full"
+                                />
+                            </div>
                 </div>
             </div>
         </section>

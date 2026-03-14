@@ -201,38 +201,67 @@ const OrderCard = ({ order, expandedOrderId, setExpandedOrderId }: { order: Orde
                         className="border-t border-border-custom bg-surface"
                     >
                         <div className="p-6 md:p-8 space-y-8">
-                            {/* Tracking Visualizer */}
-                            <div className="mb-8">
-                                <h4 className="text-[10px] font-black uppercase tracking-widest text-secondary mb-6">Delivery Status</h4>
-                                <div className="relative flex items-center justify-between mb-2">
-                                    <div className="absolute top-1/2 left-0 w-full h-[2px] bg-border-custom -translate-y-1/2 z-0" />
 
-                                    {['Pending', 'Processing', 'Shipped', 'Delivered'].map((step, idx) => {
-                                        const currentIdx = ['Pending', 'Processing', 'Shipped', 'Delivered'].indexOf(order.status);
-                                        const isCompleted = idx <= currentIdx;
-                                        const isActive = idx === currentIdx;
+                             {/* New Stepper Visualizer */}
+                             <div className="mb-12">
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-secondary mb-8">Delivery Status</h4>
+                                <div className="stepper-box">
+                                    {(['Pending', 'Processing', 'Shipped', 'Delivered'] as const).map((step, idx) => {
+                                        const statusLabels = {
+                                            Pending: { title: 'Order Placed', desc: 'Your order has been confirmed' },
+                                            Processing: { title: 'Processing', desc: 'Preparing your items' },
+                                            Shipped: { title: 'Shipping', desc: 'Your order is on the way' },
+                                            Delivered: { title: 'Delivered', desc: 'Order received' },
+                                        };
+
+                                        const currentStatusIdx = ['Pending', 'Processing', 'Shipped', 'Delivered'].indexOf(order.status);
+                                        const isCompleted = idx < currentStatusIdx || order.status === 'Delivered';
+                                        const isActive = idx === currentStatusIdx && order.status !== 'Delivered';
+                                        const isPending = idx > currentStatusIdx && order.status !== 'Delivered';
+
+                                        let stepperClass = "stepper-pending";
+                                        if (isCompleted) stepperClass = "stepper-completed";
+                                        else if (isActive) stepperClass = "stepper-active";
+
+                                        const getStatusText = () => {
+                                            if (isCompleted) return 'Completed';
+                                            if (isActive) return 'In Progress';
+                                            return 'Pending';
+                                        };
+
+                                        const getTimeText = () => {
+                                            if (idx === 0) {
+                                                const date = order.createdAt instanceof Timestamp ? order.createdAt.toDate() : order.createdAt instanceof Date ? order.createdAt : null;
+                                                return date ? date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recently';
+                                            }
+                                            if (isActive || (isCompleted && idx === currentStatusIdx)) {
+                                                const date = order.updatedAt instanceof Timestamp ? order.updatedAt.toDate() : order.updatedAt instanceof Date ? order.updatedAt : null;
+                                                return date ? date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recently';
+                                            }
+                                            if (isPending && idx === currentStatusIdx + 1) {
+                                                return 'Estimated Soon';
+                                            }
+                                            return '';
+                                        };
 
                                         return (
-                                            <div key={step} className="relative z-10 flex flex-col items-center">
-                                                <div className={cn(
-                                                    "w-4 h-4 md:w-6 md:h-6 rounded-full border-2 mb-2 transition-colors duration-500",
-                                                    isCompleted ? "bg-secondary border-secondary" : "bg-white border-border-custom",
-                                                    isActive && "ring-4 ring-secondary/20"
-                                                )}>
-                                                    {isCompleted && <div className="w-full h-full flex items-center justify-center"><div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full" /></div>}
+                                            <div key={step} className={`stepper-step ${stepperClass}`}>
+                                                <div className="stepper-circle">
+                                                    {isCompleted ? (
+                                                        <svg viewBox="0 0 16 16" fill="currentColor" height="16" width="16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"></path></svg>
+                                                    ) : (
+                                                        idx + 1
+                                                    )}
                                                 </div>
-                                                <span className={cn(
-                                                    "text-[8px] md:text-[10px] font-bold uppercase tracking-widest whitespace-nowrap",
-                                                    isCompleted ? "text-secondary" : "text-muted-custom"
-                                                )}>{step}</span>
+                                                {step !== 'Delivered' && <div className="stepper-line"></div>}
+                                                <div className="stepper-content">
+                                                    <div className="stepper-title">{statusLabels[step].title}</div>
+                                                    <div className="stepper-status">{getStatusText()}</div>
+                                                    <div className="stepper-time">{getTimeText()}</div>
+                                                </div>
                                             </div>
                                         );
                                     })}
-
-                                    <div
-                                        className="absolute top-1/2 left-0 h-[2px] bg-secondary -translate-y-1/2 z-0 transition-all duration-1000"
-                                        style={{ width: `${(Math.max(0, ['Pending', 'Processing', 'Shipped', 'Delivered'].indexOf(order.status)) / 3) * 100}%` }}
-                                    />
                                 </div>
                             </div>
 

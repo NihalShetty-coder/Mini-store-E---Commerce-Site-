@@ -7,6 +7,7 @@ import { Package, Search, RefreshCw, Eye, X, Save, Printer, Ban, Clock } from 'l
 import { cn, formatDate, formatDateTime } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { AnimatePresence, motion } from 'framer-motion';
+import { CustomDropdown } from '@/components/ui/CustomDropdown';
 
 export default function AdminOrdersPage() {
     const { orders, fetchAllOrders, updateOrderStatus, updateOrderDetails, isLoading } = useOrders();
@@ -265,20 +266,18 @@ export default function AdminOrdersPage() {
                                             </div>
                                         </td>
                                         <td className="p-4">
-                                            <select
+                                            <CustomDropdown
+                                                options={[
+                                                    { label: 'Pending', value: 'Pending' },
+                                                    { label: 'Processing', value: 'Processing' },
+                                                    { label: 'Shipped', value: 'Shipped' },
+                                                    { label: 'Delivered', value: 'Delivered' },
+                                                    { label: 'Cancelled', value: 'Cancelled' },
+                                                ]}
                                                 value={order.status}
-                                                onChange={(e) => handleStatusChange(order.id!, e.target.value)}
-                                                className={cn(
-                                                    "text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border outline-none cursor-pointer appearance-none",
-                                                    getStatusColor(order.status)
-                                                )}
-                                            >
-                                                <option value="Pending">Pending</option>
-                                                <option value="Processing">Processing</option>
-                                                <option value="Shipped">Shipped</option>
-                                                <option value="Delivered">Delivered</option>
-                                                <option value="Cancelled">Cancelled</option>
-                                            </select>
+                                                onChange={(val) => handleStatusChange(order.id!, val)}
+                                                className="w-32"
+                                            />
                                         </td>
                                         <td className="p-4">
                                             {order.paymentStatus === 'Paid' ? (
