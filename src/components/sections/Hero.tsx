@@ -15,7 +15,7 @@ const Hero = () => {
                     rel="preload"
                     as="image"
                     href={heroConfig.backgroundImage}
-                    fetchpriority="high"
+                    fetchPriority="high"
                 />
             </Head>
             <section className="relative h-[530px] w-full overflow-hidden bg-muted-custom flex items-center justify-center">
