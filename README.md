@@ -1,4 +1,4 @@
-# Antigravity E-Commerce Store
+# E-Commerce Store
 
 A production-ready e-commerce platform built with Next.js 16, Firebase, and Stripe.
 
