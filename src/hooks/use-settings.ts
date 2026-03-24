@@ -35,7 +35,7 @@ export const DEFAULT_CONTACTS: ContactMethod[] = [
 export const DEFAULT_HERO = {
     title: 'Elevated Essentials',
     subtitle: 'Discover our new collection of editorial-inspired fashion designed for the modern individual.',
-    backgroundImage: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop'
+    backgroundImage: '/hero/hero-banner.webp'
 };
 
 export const DEFAULT_STATS = [
